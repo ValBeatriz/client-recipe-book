@@ -1,18 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
 import './index.css';
-import reportWebVitals from './reportWebVitals';
-import HomePage from './pages/HomePage';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import CreateRecipePage from './pages/CreateRecipePage';
+import Aplicacion from './App';
+import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
-  <React.StrictMode>
-    <CreateRecipePage />
-    <HomePage /> 
-  </React.StrictMode>
+  <BrowserRouter>
+    <Aplicacion />
+  </BrowserRouter>,
+  document.getElementById("raiz")
 );
-
-
-reportWebVitals();
