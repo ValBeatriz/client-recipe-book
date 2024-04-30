@@ -27,6 +27,7 @@ function ListRecipePage() {
         setCurrentPage(page);
     };
 
+
     return (
         <div>
             <div class="list-group">
@@ -35,14 +36,15 @@ function ListRecipePage() {
                         <Link className="list-group-item-action" key={item.IdRecipe} to={`/detail/${item.IdRecipe}`}>
                             {item.Name} - {item.Category}
                         </Link>
-                        
-                            <button type="submit" class="btn btn-primary mb-3">Editar</button>
-                        
-
                     </div>
                 ))}
-
             </div>
+
+            <hr />
+            <Link to="/new">
+                <button type="submit" class="btn btn-primary mb-3">Agregar nueva receta</button>
+            </Link>
+
             {/* Paginación */}
             <nav aria-label="Page navigation example">
                 <ul className="pagination">
