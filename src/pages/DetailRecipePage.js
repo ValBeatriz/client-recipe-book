@@ -17,9 +17,7 @@ function DetailRecipePage() {
         const fetchData = async () => {
             try {
                 const response = await Axios.get(`http://localhost:3100/api/v1/recipe/${id}`);
-                console.log(id);
                 setData(response.data); // Almacena los datos en el estado
-                console.log(response.data);
             } catch (error) {
                 console.error('Error al obtener datos de la API:', error);
             }
