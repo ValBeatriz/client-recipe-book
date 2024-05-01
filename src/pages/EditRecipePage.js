@@ -45,7 +45,7 @@ function EditRecipePage() {
         }).then(() => {
             setShowToast(true);
             setTipeMessage('success')
-            setMessageAlert('Se han editar correctamente la receta!')
+            setMessageAlert('Se ha editado correctamente la receta!')
             setTimeout(() => {
                 handleReturnClick();
             }, 2000);

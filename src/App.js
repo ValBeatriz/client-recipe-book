@@ -1,7 +1,5 @@
-import './App.css';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import HomePage from '../src/pages/HomePage';
 import ListRecipe from '../src/pages/ListRecipePage';
 import DetailRecipe from '../src/pages/DetailRecipePage';
 import EditRecipePage from './pages/EditRecipePage';
@@ -12,7 +10,6 @@ function App() {
   return (
     <div className='Aplicacion'>
       <Routes>
-        {/* <Route path="/" element={ <HomePage />} /> */}
         <Route path="/" element={ <ListRecipe />} />
         <Route path="/new" element={ <CreateRecipePage /> } />
         <Route path="/detail/:id" element={ <DetailRecipe />} />
