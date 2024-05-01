@@ -1,67 +1,99 @@
 import { useState, useEffect } from "react";
-import Axios from 'axios';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import GetAllRecipe from '../service/get-all-recipe.service';
 
 function ListRecipePage() {
     const [data, setData] = useState({ Items: [] });
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-
-
+    const [loading, setLoading ] = useState(false);
+    const [search, setSearch] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await Axios.get(`http://localhost:3100/api/v1/recipe?size=5&page=${currentPage - 1}&search=`);
-                setData(response.data);
-                setTotalPages(response.data.TotalPages);
-            } catch (error) {
-                console.error('Error al obtener datos de la API:', error);
-            }
-        };
-
-        fetchData();
+        fetchData(currentPage);
     }, [currentPage]);
 
-    const handlePageChange = (page) => {
+    const fetchData = async (page) => {
         setCurrentPage(page);
+        setLoading(true);
+        GetAllRecipe.fetchData(page, search)
+            .then(response => {
+                setData(response.data);
+                setTotalPages(response.data.TotalPages);
+                setLoading(false);
+            })
+            .catch(error => {
+                setLoading(false);
+                console.error('Error al obtener datos de la API:', error);
+            });
+    };
+
+    const handlePageChange = (page) => {
+        if(page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
+    const handleClick = (id) => {
+        navigate(`/detail/${id}`);  
+    };
+
+    const handleCreateRecipeClick = (id) => {
+        navigate(`/new`);  
     };
 
 
     return (
-        <div>
-            <div class="list-group">
-                {data.Items.map(item => (
-                    <div key={item.IdRecipe} class="list-group-item" >
-                        <Link className="list-group-item-action" key={item.IdRecipe} to={`/detail/${item.IdRecipe}`}>
-                            {item.Name} - {item.Category}
-                        </Link>
-                    </div>
-                ))}
+        <div class="container">
+
+            <h2>Listado de Recetas</h2>
+
+            <hr/>
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Ingrese busqueda" aria-label="Ingrese busqueda" aria-describedby="button-addon2" onChange={(event) => { setSearch(event.target.value); }}/>
+                <button class="btn btn-outline-primary" onClick={() => fetchData(1)}>Buscar</button>
+                <button class="btn btn-success" onClick={() => handleCreateRecipeClick()}>Nueva Receta</button>
             </div>
 
-            <hr />
-            <Link to="/new">
-                <button type="submit" class="btn btn-primary mb-3">Agregar nueva receta</button>
-            </Link>
-
-            {/* Paginación */}
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Categria</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        data.Items.map(item => (
+                            <tr>
+                                <td>{item.Name}</td>
+                                <td>{item.Category}</td>
+                                <td>
+                                    <button onClick={() => handleClick(item.IdRecipe)} class="btn btn-primary mb-3">Ver Detalle</button>
+                                </td>
+                            </tr>
+                        ))
+                    }
+                </tbody>
+            </table>
             <nav aria-label="Page navigation example">
                 <ul className="pagination">
-                    {Array.from({ length: totalPages }, (_, index) => (
-                        <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                            <a className="page-link" href="#" onClick={() => handlePageChange(index + 1)}>{index + 1}</a>
-                        </li>
-                    ))}
+                    <li class="page-item"><a class="page-link" href="#" onClick={() => handlePageChange(currentPage - 1)}>Previous</a></li>
+                    {
+                        Array.from({ length: totalPages }, (_, index) => (
+                            <li key={index} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                                <a className="page-link" href="#" onClick={() => handlePageChange(index + 1)}>{index + 1}</a>
+                            </li>
+                        ))
+                    }
+                    <li class="page-item"><a class="page-link" href="#" onClick={() => handlePageChange(currentPage + 1)}>Next</a></li>
                 </ul>
             </nav>
         </div>
-
-
-
-
     );
 }
-
 
 export default ListRecipePage;
